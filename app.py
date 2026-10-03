@@ -39,10 +39,10 @@ def extract_emails(text):
 today_date_str = datetime.now().strftime('%Y-%m-%d')
 
 countries = [
-    "European Economic Area", "Luxembourg", "Switzerland", "Estonia", "Denmark", "Finland", "Sweden", "Norway", "Greenland", "Iceland",
-    "Australia", "New Zealand", "Latvia", "Lithuania", "Ireland", "Czech Republic", "Hungary", "Turkey",
-    "Canada", "United Kingdom", "Germany", "Belgium", "Japan", "South Korea", "Hong Kong SAR", "Singapore",
-    "Saudi Arabia", "United Arab Emirates", "Qatar", "Oman", "Kuwait", "Bahrain", "EMEA"
+    "Switzerland", "Denmark", "Finland", "Sweden", "Norway", "Greenland", "Iceland",
+    "Australia", "New Zealand", "Ireland", "Turkey",
+    "Canada", "United Kingdom", "Germany", "Belgium", 
+    "European Economic Area", "EMEA"
 ]
 
 excluded_countries = ["United States", "USA", "États-Unis", "India", "Pakistan", "Philippines", "Israel", "Vietnam", "Russia", "Ukraine"]
@@ -69,7 +69,7 @@ for country in countries:
     for keyword in keywords_for_scraping:
         if break_step1:
             break
-        for i in range(0, 3):  
+        for i in range(0, 2):  
             
             # --- Safetime Check ---
             if has_time_expired():
