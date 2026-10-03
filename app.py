@@ -36,148 +36,30 @@ def extract_emails(text):
 # ==========================================
 # --- CONFIGURATION & SEARCH CRITERIA ---
 # ==========================================
-yesterday = datetime.now() - timedelta(days=1)
-today_date_str = datetime.now().strftime('%Y-%m-%d') # Use today's date for counts
+today_date_str = datetime.now().strftime('%Y-%m-%d')
 
 countries = [
-    "Saudi Arabia", "United Arab Emirates", "Dubai","Abu Dhabi",
-    "Luxembourg", "Switzerland", "Estonia", "Denmark", "Finland", "Sweden", "Norway", "austria", "Latvia", "Lithuania", "Ireland",
-    "Czech Republic", "Hungary", "Romania", "Slovakia", "Cyprus", "Iceland", "European Economic Area",
-    "Morocco", "Qatar", "Oman", "Kuwait", "Bahrain",
-    "Japan", "South Korea", "Hong Kong SAR", "Singapore", "Australia", "New Zealand", "Turkey", "Canada",
-    "Bosnia and Herzegovina", "Albania", "Ukraine", "Russia", "South Africa", "Mauritius", "Greenland",
+    "European Economic Area", "Luxembourg", "Switzerland", "Estonia", "Denmark", "Finland", "Sweden", "Norway", "Greenland", "Iceland",
+    "Australia", "New Zealand", "Latvia", "Lithuania", "Ireland", "Czech Republic", "Hungary", "Turkey",
+    "Canada", "United Kingdom", "Germany", "Belgium", "Japan", "South Korea", "Hong Kong SAR", "Singapore",
+    "Saudi Arabia", "United Arab Emirates", "Qatar", "Oman", "Kuwait", "Bahrain", "EMEA"
 ]
 
-excluded_countries = ["United States", "USA", "États-Unis", "India", "Pakistan", "Philippines", "Israel", "Vietnam"]
+excluded_countries = ["United States", "USA", "États-Unis", "India", "Pakistan", "Philippines", "Israel", "Vietnam", "Russia", "Ukraine"]
 
-keywords_for_scraping = [ # Keywords used to search on LinkedIn
-    "AI", "IA", "ai automation", "prompt", "workflow", "automatisation", "automation", "FDE",
-    "python", "no code", "low code", "no-code", "low-code", "Data", "RPA", "n8n", "llm",
-    "GTM", "Marketing", "zapier", "GEO",
+keywords_for_scraping = [    
+    "Warehouse", "Construction", "Labourer", "Fruit Picker", "Demolition Worker",
+    "Office Installer", "Event Setup Crew", "Furniture Removalist", "Landscaping",
+    "Utility Worker", "Trade Assistant", "Mechanical Fitter", "Boilermaker",
+    "Dump Truck Operator", "Rope Access Technician", "Kitchenhand", "Driller's Offsider",
+    "Storeperson", "Maintenance Offsider", "Scaffolder's Offsider", "Mine Site Labourer"
 ]
-
-# Keywords for the "Linkedin Worldwide" sheet filter
-linkedin_worldwide_filter_keywords = [
-    "n8n", "zapier", "make.com", "integromat"
-]
-
-# ==========================================
-# --- SKILL CATEGORIES & DICTIONARIES ---
-# ==========================================
-skill_categories = {
-    "Data Analyst": [
-        "VBA", "power query", "DAX", "power bi", "tableau", "Excel",
-        "data visualization", "data analysis", "web scraping",
-        "looker", "qlik", "Streamlit", "Real-time analytics", "Microsoft Fabric"
-    ],
-    "Data Engineer": [
-        "etl", "airflow", "dbt", "Apache", "kafka", "hadoop", "snowflake", "databricks", "redshift", "bigquery", "Databricks",
-        "batch processing", "stream processing", "data modeling", "data pipelines", "SQL", "Nosql", "MLflow", "Lakehouse architecture", "Kubeflow", "CI/CD" 
-    ],
-    "Data Scientist": [
-        "predictive modeling", "model evaluation",
-        "statistics", "nlp", "computer vision",
-        "scikit-learn", "tensorflow", "pytorch", "keras", "xgboost", "lightgbm", "MCP",
-        "time series", "a/b testing"
-    ],
-    "AI/ML Engineer": [
-        "llm", "prompt engineering", 'context engineering', "Local llm",
-        "fine-tuning", "fine tuning", "rag", "genai", "gen ai", "MLOPS", "Machine learning",
-        "retrieval augmented generation", "hugging face", "openai", "gemini",
-        "deepseek", "claude", "transformers", "bert", "llama", "ollama",
-        "Hugging Face ", "AutoML ", "MLOps", "Few-shot learning",
-        "Reinforcement learning", "MLflow", "LangChain", "Langraph", "crewai", "tenseflow", "keras", "sckit-learn", "sckit learn"
-    ],
-    "AI Automation/RPA/No-Code": [
-        "n8n", "zapier", "make.com", "integromat", "uipath", "power automate", "workato",
-        "power apps", "mendix", "automation anywhere", "rpa", "appian", "servicenow",
-        "Bubble", "Webflow", "Framer", "Glide", "Retool", "Lovable", "Bolt", "Replit",
-        "Openclaw", "Hermes", "Claude Code", "Claude Cowork", "Antigravity", "copilot studio", "Claude SDK", "OpenAI SDK","Semantic Kernel"
-    ],
-    "Programming Languages": [
-        "python", "javascript", "go", "java", "c#", "scala",
-        "kotlin", "swift", "php", "ruby", "rust", "HTML", "CSS", "sql", "nosql",
-        "typescript", "bash", "shell scripting", "R"
-    ],
-    "DevOps": [
-        "docker", "kubernetes", "ci/cd", "github actions", "jenkins", "Kafka",
-        "terraform", "ansible", "helm", "prometheus", "grafana", "git", "Apache"
-    ],
-    "Cloud Platforms": [
-        "aws", "azure", "gcp",
-        "AWS Bedrock", "Azure OpenAI Service", "GCP Vertex AI"
-    ],
-    "Databases": [
-        "postgresql", "mysql", "mongodb", "redis", "cassandra", "sqlite",
-        "Neo4j", "Amazon QLDB", "CockroachDB", "YugabyteDB", "TimescaleDB", "DynamoDB", "cloud-native DB",
-        "Pinecone", "Weaviate", "Qdrant", "pgvector"
-    ],
-    "Frontend/UI/UX": [
-        "React", "Next.js", "Vue.js", "Nuxt.js", "Angular", "SvelteKit", "SolidJS", "Astro",
-        "TailwindCSS", "CSS", "Framer Motion", "GSAP",
-        "Figma", "Adobe", "Canva", "Framer", "Capcut",
-        "Three.js", "WebGL", "React Three Fiber", "blender"
-    ],
-    "Backend/API Development": [
-        "node.js", "express.js", "nestjs", "ASP.net",
-        "spring boot", "django", "flask", "fastapi", "asp.net", "Deno",
-        "REST API", "GraphQL", "gRPC", "tRPC", "Async",
-        "WebSockets", "Kafka", "OAuth 2.0", "JWT", "API"
-    ],
-    "Project / Product Management": [
-        "Agile", "Scrum", "Kanban", "Scrum@Scale", "SAFe",
-        "hybrid project frameworks", "OKRs", "PMP", "Trello",
-        "Jira", "Linear", "ClickUp", "Notion", "Asana", "Ms Project",
-        "product roadmapping", "backlog grooming", "stakeholder management",
-        "risk management", "product analytics"
-    ],
-    "Cybersecurity": [
-        "penetration", "ethical hacking", "OWASP",
-        "SIEM", "SOC",
-        "vulnerability assessment", "zero-trust architecture",
-        "IAM", "OAuth",
-        "API security", "CSPM", "container security",
-        "DevSecOps", "secrets management",
-        "threat modeling", "incident response"
-    ],
-    "Business Intelligence & Strategy": [
-        "market research", "competitive analysis", "strategic planning",
-        "business case writing", "ROI",
-        "decision making", "KPI",
-        "veille stratégique",
-        "Lean Six Sigma", "HSE",
-        "ISO", "QHSE", "ESG"
-    ],
-    "Ads / Growth Marketing": [
-        "Google Ads", "Meta Ads", "Instagram Ads", "TikTok Ads", "LinkedIn Ads",
-        "Chatgpt ads",
-        "Google Tag Manager", "search console", "Ahrefs", "Semrush", "Moz",
-        "Google Analytics", "Looker"
-    ],
-    "ERP Systems": [
-        "SAP", "Salesforce", "Oracle", "Google sheets",
-        "Microsoft Dynamics", "Microsoft 365", "Odoo", "NetSuite", "HubSpot", "Zoho", "Monday CRM",
-        "Pipedrive", "Freshsales"
-    ]
-}
-
-# Consolidate all skills into a single list for scraping and create a skill-to-tag map
-count_skills_keywords = []
-skill_to_tag_map = {}
-for tag, skills in skill_categories.items():
-    for skill in skills:
-        count_skills_keywords.append(skill)
-        skill_to_tag_map[skill] = tag # Map each skill to its primary tag
-
-# Ensure unique skills in the consolidated list
-count_skills_keywords = list(set(count_skills_keywords))
-
 
 # ==========================================
 # --- STEP 1 — SCRAPE JOB LINKS ---
 # ==========================================
-links = [] # Will now store tuples: (clean_url, api_link, keyword)
-seen_job_ids = set() # O(1) lookups: fixes the CPU freezing issue
+links = [] # Stores tuples: (clean_url, api_link, keyword)
+seen_job_ids = set() # O(1) lookups: prevents duplicate API calls
 break_step1 = False
 
 print("🚀 Starting Step 1: Scraping job links...")
@@ -200,7 +82,6 @@ for country in countries:
 
             time.sleep(1)
             try:
-                # FIX 1: Added timeout=10 so the script doesn't hang forever if LinkedIn blocks it
                 response = requests.get(url, headers=headers, timeout=10)
                 soup = BeautifulSoup(response.text, "html.parser")
                 job_links = soup.find_all("a", class_="base-card__full-link")
@@ -210,12 +91,10 @@ for country in countries:
                     if not job_url: 
                         continue
                     
-                    # FIX 2: Safely extract purely the numerical Job ID to ignore tracking parameters
                     url_without_params = job_url.split('?')[0]
                     job_id = url_without_params.split('-')[-1]
                     
                     if job_id.isdigit():
-                        # FIX 3: Set lookups are instant, fixing the CPU bottleneck
                         if job_id not in seen_job_ids:
                             seen_job_ids.add(job_id)
                             clean_url = f"https://www.linkedin.com/jobs/view/{job_id}"
@@ -237,12 +116,11 @@ for clean_url, api_link, searched_keyword in links:
     
     # --- Safetime Check ---
     if has_time_expired():
-        print(f"⚠️ Reached the 5.5 hours benchmark during Step 2. Activating fallback script to process existing ({len(all_job_data)}) records.")
+        print(f"⚠️ Reached the 5.5 hours benchmark during Step 2. Processing existing ({len(all_job_data)}) records.")
         break
 
     try:
         time.sleep(1)
-        # FIX 4: Requesting the API link instead of full webpage + Added Timeout
         response = requests.get(api_link, headers=headers, timeout=10)
         soup = BeautifulSoup(response.text, "html.parser")
 
@@ -267,7 +145,7 @@ for clean_url, api_link, searched_keyword in links:
             "title": title,
             "company": company,
             "country": country,
-            "link": clean_url, # Now saving the beautiful clean URL to your sheet
+            "link": clean_url,
             "searched_keyword": searched_keyword,
             "description": desc 
         })
@@ -275,59 +153,28 @@ for clean_url, api_link, searched_keyword in links:
     except Exception as e:
         print(f"Error scraping details for {clean_url}: {e}")
 
-
 # ==========================================
-# --- STEP 3 TO 6 — PROCESS & SAVE DATA ---
+# --- STEP 3 — PROCESS & SAVE TO GOOGLE SHEETS ---
 # ==========================================
 if not all_job_data:
     print("❌ No data was parsed during this execution window. Google Sheets will remain unchanged.")
 else:
-    # --- Step 3 — Create DataFrame from all scraped data ---
+    # Create DataFrame from all scraped data
     df_all_jobs = pd.DataFrame(all_job_data)
     df_all_jobs = df_all_jobs.drop_duplicates(subset=['link']).reset_index(drop=True)
     print(f"Total unique jobs scraped (after initial deduplication): {len(df_all_jobs)}")
 
-    # --- Step 4 — Process for "Linkedin Worldwide" sheet ---
-    def check_worldwide_keywords(description):
-        found_world_keywords = [k for k in linkedin_worldwide_filter_keywords if re.search(r'\b' + re.escape(k) + r'\b', description, flags=re.IGNORECASE)]
-        return ", ".join(found_world_keywords) if found_world_keywords else ""
-
-    # Extract emails & filter keywords from description
+    # Extract emails from description
     df_all_jobs['Email'] = df_all_jobs['description'].apply(extract_emails)
-    df_all_jobs['found_linkedin_worldwide_keywords'] = df_all_jobs['description'].apply(check_worldwide_keywords)
     
-    filtered_worldwide_df = df_all_jobs[df_all_jobs['found_linkedin_worldwide_keywords'] != ""].copy()
+    # Select and reorder final columns for Google Sheets output
+    final_df = df_all_jobs[[
+        "Date", "title", "company", "country", "link", "searched_keyword", "Email"
+    ]]
 
-    # Select and reorder columns for "Linkedin Worldwide" sheet (including Email)
-    filtered_worldwide_df = filtered_worldwide_df[[
-        "Date", "title", "company", "country", "link", "Email", "searched_keyword", "found_linkedin_worldwide_keywords"
-    ]].rename(columns={"found_linkedin_worldwide_keywords": "Found Keywords"})
+    print(f"Jobs ready to write to Google Sheets: {len(final_df)}")
 
-    print(f"Jobs for 'Linkedin Worldwide' sheet (unique and filtered): {len(filtered_worldwide_df)}")
-
-    # --- Step 5 — Process for "Count Skills" sheet ---
-    skill_counts = {skill: 0 for skill in count_skills_keywords}
-
-    for index, row in df_all_jobs.iterrows():
-        description = row['description']
-        for skill in count_skills_keywords:
-            # Use regex for whole word matching
-            if re.search(r'\b' + re.escape(skill) + r'\b', description, flags=re.IGNORECASE):
-                skill_counts[skill] += 1
-
-    # Convert skill counts to a DataFrame
-    df_skill_counts_list = []
-    for skill, count in skill_counts.items():
-        tag = skill_to_tag_map.get(skill, "Other") # Get the tag for the skill, default to "Other"
-        df_skill_counts_list.append({"Date": today_date_str, "Skill": skill, "Tag": tag, "Count": count})
-
-    df_skill_counts = pd.DataFrame(df_skill_counts_list)
-    df_skill_counts = df_skill_counts[['Date', 'Tag', 'Skill', 'Count']] # Reorder columns to place Tag after Date
-
-    print(f"\nSkill counts for today ({today_date_str}):")
-    print(df_skill_counts)
-
-    # --- Step 6: Connect and Update Google Sheets ---
+    # Connect to Google Sheets via Service Account
     service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT"])
     SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
     credentials = Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
@@ -335,48 +182,25 @@ else:
 
     SPREADSHEET_URL = os.environ["SPREADSHEET_URL"]
 
-    # --- Update "Linkedin Worldwide" Sheet ---
-    WORKSHEET_NAME_WORLDWIDE = 'Linkedin Worldwide'
+    # Target Worksheet: "Sheet1"
+    WORKSHEET_NAME = 'Sheet1'
     try:
-        sheet_worldwide = client.open_by_url(SPREADSHEET_URL).worksheet(WORKSHEET_NAME_WORLDWIDE)
+        sheet = client.open_by_url(SPREADSHEET_URL).worksheet(WORKSHEET_NAME)
     except gspread.WorksheetNotFound:
-        sheet_worldwide = client.open_by_url(SPREADSHEET_URL).add_worksheet(title=WORKSHEET_NAME_WORLDWIDE, rows="1000", cols="20")
+        sheet = client.open_by_url(SPREADSHEET_URL).add_worksheet(title=WORKSHEET_NAME, rows="1000", cols="20")
 
-    print(f"\nUpdating '{WORKSHEET_NAME_WORLDWIDE}' sheet...")
-    sheet_worldwide.clear() # Clear existing data
+    print(f"\nUpdating '{WORKSHEET_NAME}' sheet...")
+    sheet.clear() # Clear existing data
     
-    # Avoid gspread updates with completely empty structures
-    if not filtered_worldwide_df.empty:
-        sheet_worldwide.update(
-            [filtered_worldwide_df.columns.values.tolist()] +
-            filtered_worldwide_df.values.tolist()
+    # Update sheet content
+    if not final_df.empty:
+        sheet.update(
+            [final_df.columns.values.tolist()] +
+            final_df.values.tolist()
         )
     else:
-        sheet_worldwide.update([["Date", "title", "company", "country", "link", "Email", "searched_keyword", "Found Keywords"]])
-    print(f"✅ Data successfully updated in '{WORKSHEET_NAME_WORLDWIDE}'!")
-
-    # --- Update "Count Skills" Sheet ---
-    WORKSHEET_NAME_COUNT_SKILLS = 'Count Skills'
-    try:
-        sheet_count_skills = client.open_by_url(SPREADSHEET_URL).worksheet(WORKSHEET_NAME_COUNT_SKILLS)
-    except gspread.WorksheetNotFound:
-        sheet_count_skills = client.open_by_url(SPREADSHEET_URL).add_worksheet(title=WORKSHEET_NAME_COUNT_SKILLS, rows="1000", cols="20")
-
-    print(f"\nUpdating '{WORKSHEET_NAME_COUNT_SKILLS}' sheet...")
-
-    # Get existing data from the sheet to append
-    existing_data = sheet_count_skills.get_all_values()
-    if existing_data:
-        # Check if headers match, if not, update headers
-        if existing_data[0] != df_skill_counts.columns.tolist():
-            sheet_count_skills.clear()
-            sheet_count_skills.update([df_skill_counts.columns.tolist()])
-    else:
-        # Sheet is empty, add headers first
-        sheet_count_skills.update([df_skill_counts.columns.tolist()])
-
-    # Append new data securely
-    sheet_count_skills.append_rows(df_skill_counts.values.tolist(), value_input_option='RAW', insert_data_option='INSERT_ROWS')
-    print(f"✅ Data successfully appended to '{WORKSHEET_NAME_COUNT_SKILLS}'!")
+        sheet.update([["Date", "title", "company", "country", "link", "searched_keyword", "Email"]])
+        
+    print(f"✅ Data successfully updated in '{WORKSHEET_NAME}'!")
 
 print(f"🏁 Execution finished gracefully. Total time elapsed: {round((time.time() - START_TIME) / 60, 2)} minutes.")
