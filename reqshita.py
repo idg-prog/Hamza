@@ -39,20 +39,41 @@ def extract_emails(text):
 today_date_str = datetime.now().strftime('%Y-%m-%d')
 
 countries = [
-    "Switzerland", "Denmark", "Finland", "Sweden", "Norway", "Greenland", "Iceland",
-    "Australia", "New Zealand", "Ireland", "Turkey",
-    "Canada", "United Kingdom", "Germany", "Belgium", 
-    "European Economic Area", "EMEA"
+    "UAE", "Dubai", "Abu Dhabi"
 ]
 
 excluded_countries = ["United States", "USA", "États-Unis", "India", "Pakistan", "Philippines", "Israel", "Vietnam", "Russia", "Ukraine"]
 
-keywords_for_scraping = [    
-    "Warehouse", "Construction", "Labourer", "Fruit Picker", "Demolition Worker",
-    "Office Installer", "Event Setup Crew", "Furniture Removalist", "Landscaping",
-    "Utility Worker", "Trade Assistant", "Mechanical Fitter", "Boilermaker",
-    "Dump Truck Operator", "Rope Access Technician", "Kitchenhand", "Driller's Offsider",
-    "Storeperson", "Maintenance Offsider", "Scaffolder's Offsider", "Mine Site Labourer"
+keywords_for_scraping = [
+    # Core Roles (Exact & Close Matches)
+    "Senior Business Analyst",
+    "Senior Data Analyst",
+    "Business Data Analyst",
+    "Data & AI Consultant",
+    "AI Business Analyst",
+    "Digital Transformation Analyst",
+    "AI Consultant",
+    "Data Analyst",
+    
+    # Pricing, Revenue & Commercial Analytics
+    "Senior Pricing Analyst",
+    "Revenue Optimization Analyst",
+    "Commercial Data Analyst",
+    "Business Growth Analyst",
+    
+    # Demand Planning & Market Intelligence
+    "Demand Planning Analyst",
+    "Market Intelligence Analyst",
+    "Supply Chain Data Analyst",
+    "Forecasting Analyst",
+    
+    # BI, Product & Process Delivery
+    "Power BI",
+    "BI Analyst",
+    "Business Intelligence Analyst",
+    "Product Business Analyst",
+    "Business Process Analyst",
+    "Enterprise Systems Analyst",
 ]
 
 # ==========================================
@@ -69,7 +90,7 @@ for country in countries:
     for keyword in keywords_for_scraping:
         if break_step1:
             break
-        for i in range(0, 2):  
+        for i in range(0, 5):  
             
             # --- Safetime Check ---
             if has_time_expired():
@@ -183,7 +204,7 @@ else:
     SPREADSHEET_URL = os.environ["SPREADSHEET_URL"]
 
     # Target Worksheet: "Sheet1"
-    WORKSHEET_NAME = 'Sheet1'
+    WORKSHEET_NAME = 'Raqshitha'
     try:
         sheet = client.open_by_url(SPREADSHEET_URL).worksheet(WORKSHEET_NAME)
     except gspread.WorksheetNotFound:
