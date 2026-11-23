@@ -39,22 +39,23 @@ def extract_emails(text):
 today_date_str = datetime.now().strftime('%Y-%m-%d')
 
 countries = [
-    "Switzerland", "Denmark", "Finland", "Sweden", "Norway", "Greenland", "Iceland",
-    "Australia", "New Zealand", "Ireland", "Turkey",
-    "Canada", "United Kingdom", "Germany", "Belgium", 
-    "European Economic Area", "EMEA"
+    "UAE", "Dubai", "Sharjah", "Abu Dhabi"
 ]
 
 excluded_countries = ["United States", "USA", "États-Unis", "India", "Pakistan", "Philippines", "Israel", "Vietnam", "Russia", "Ukraine"]
 
-keywords_for_scraping = [    
-    "Warehouse", "Construction", "Labourer", "Fruit Picker", "Demolition Worker",
-    "Office Installer", "Event Setup Crew", "Furniture Removalist", "Landscaping",
-    "Utility Worker", "Trade Assistant", "Mechanical Fitter", "Boilermaker",
-    "Dump Truck Operator", "Rope Access Technician", "Kitchenhand", "Driller's Offsider",
-    "Storeperson", "Maintenance Offsider", "Scaffolder's Offsider", "Mine Site Labourer"
+keywords_for_scraping = [
+    # Procurement / supply chain
+    "Procurement Manager",
+    "Purchasing Manager",
+    "Supply Chain Manager",
+    "F&B Procurement",
+    "Food Procurement Manager",
+    "Purchasing Coordinator",
+    "Inventory Manager",
+    "Vendor Manager",
+    "Restaurant Manager"
 ]
-
 # ==========================================
 # --- STEP 1 — SCRAPE JOB LINKS ---
 # ==========================================
