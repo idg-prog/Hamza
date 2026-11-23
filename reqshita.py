@@ -90,7 +90,7 @@ for country in countries:
     for keyword in keywords_for_scraping:
         if break_step1:
             break
-        for i in range(0, 5):  
+        for i in range(0, 2):  
             
             # --- Safetime Check ---
             if has_time_expired():
