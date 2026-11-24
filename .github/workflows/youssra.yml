@@ -1,8 +1,8 @@
-name: LinkedIn Job Scraperr
+name: LinkedIn Youssra
 
 on:
   schedule:
-    - cron: '0 0 * * *'  
+    - cron: '0 5 * * *'  
   workflow_dispatch:     # Allows manual run
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
           pip install -r requirements.txt
 
       # 4️⃣ Run LinkedIn scraper with secret
-      - name: Run Youssra scraper
+      - name: Run LinkedIn Youssra
         run: python youssra.py
         env:
           GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
