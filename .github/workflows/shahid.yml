@@ -1,4 +1,4 @@
-name: LinkedIn Job Scraperr
+name: LinkedIn Shahid
 
 on:
   schedule:
@@ -27,7 +27,7 @@ jobs:
           pip install -r requirements.txt
 
       # 4️⃣ Run LinkedIn scraper with secret
-      - name: Run shahid scraper
+      - name: Run LinkedIn Shahid
         run: python shahid.py
         env:
           GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
