@@ -2,7 +2,7 @@ name: LinkedIn Job Scraperr
 
 on:
   schedule:
-    - cron: '0 0 * * *'  
+    - cron: '0 9 * * *'  
   workflow_dispatch:     # Allows manual run
 
 jobs:
